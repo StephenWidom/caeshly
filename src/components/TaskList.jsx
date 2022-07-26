@@ -54,16 +54,16 @@ const StyledTable = styled(Table)`
   }
 
   tr.perm td {
-    background: #c1dce3;
+    background: #e6f7ff;
   }
 
   tr.perm:nth-child(even) td {
-    background: #ceebf2;
+    background: #f1faff;
   }
 
   tr.urgent td {
-    background: #963939;
-    color: #fff;
+    background: #fff1f0;
+    color: #cf1322;
   }
 
   tr.urgent:nth-child(even) td {
@@ -77,11 +77,11 @@ const StyledTable = styled(Table)`
   }
 
   tr.urgent.done:nth-child(even) td {
-    background: #fafafa;
+    background: #fcfcfc;
   }
 
   tr:nth-child(even) td {
-    background: #fafafa;
+    background: #fcfcfc;
   }
 
   th:nth-child(1),
