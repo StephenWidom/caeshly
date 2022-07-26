@@ -27,8 +27,10 @@ import {
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 
 const StyledTable = styled(Table)`
-  &.responsiveTable td.pivoted {
-    padding-left: calc(21% + 10px) !important;
+  @media screen and (max-width: 40em) {
+    &.responsiveTable td.pivoted {
+      padding-left: calc(21% + 10px) !important;
+    }
   }
 
   &.responsiveTable td .tdBefore {
@@ -105,6 +107,32 @@ const TaskList = ({ list }) => {
   const [date, setDate] = useContext(DayContext);
   const [cash, setCash] = useContext(CashContext);
   const [withdrawals, setWithdrawals] = useContext(WithdrawalsContext);
+
+  const createExamples = async () => {
+    const examples = (await import("../examples.js")).default;
+    setTasks(examples);
+    setDays(
+      produce(days, (draft) => {
+        const todayIndex = days.findIndex((d) => d.date === date);
+        const permTasks = examples.reduce((acc, curr) => {
+          if (curr.permanent) acc.push({ taskId: curr.id, done: 0 });
+          return acc;
+        }, []);
+        const todaysTasks = examples.map((t) => {
+          return {
+            taskId: t.id,
+            done: 0,
+          };
+        });
+        draft[todayIndex].dailyTasks = todaysTasks;
+        draft.forEach((el, i) => {
+          if (i !== todayIndex) {
+            draft[i].dailyTasks = permTasks;
+          }
+        });
+      })
+    );
+  };
 
   const importData = (e) => {
     const file = e.target.files[0];
@@ -311,7 +339,7 @@ const TaskList = ({ list }) => {
             })
           ) : (
             <Tr>
-              <Td>
+              <Td colSpan="4">
                 <Typography.Text style={{ padding: 8 }}>
                   Add a task or{" "}
                   <Typography.Link
@@ -319,7 +347,11 @@ const TaskList = ({ list }) => {
                   >
                     import data
                   </Typography.Link>{" "}
-                  to get started!
+                  to get started!{" "}
+                  <Typography.Link onClick={createExamples}>
+                    Click here{" "}
+                  </Typography.Link>
+                  to create a few example tasks.
                 </Typography.Text>
               </Td>
             </Tr>
