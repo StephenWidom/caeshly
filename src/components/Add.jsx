@@ -39,10 +39,6 @@ const Add = ({ inHeader }) => {
     );
   };
 
-  const TaskAdded = () => {
-    message.success("Task added");
-  };
-
   const addTask = ({ name, money, repeatable, permanent, urgent }) => {
     const newTaskId = getNextTaskId(tasks);
     const task = {
@@ -76,7 +72,7 @@ const Add = ({ inHeader }) => {
       );
     }
     formRef?.current.resetFields();
-    TaskAdded();
+    message.success("Task added");
     hideModal();
   };
 
@@ -107,13 +103,18 @@ const Add = ({ inHeader }) => {
           <Button key={`cancel-${uniqueId()}`} onClick={hideModal}>
             Cancel
           </Button>,
-          <Button type="primary" form="addTask" key="submit" htmlType="submit">
+          <Button
+            type="primary"
+            form={`addTask${inHeader ? "Header" : ""}`}
+            key="submit"
+            htmlType="submit"
+          >
             Add Task
           </Button>,
         ]}
       >
         <Form
-          name="addTask"
+          name={`addTask${inHeader ? "Header" : ""}`}
           onFinish={addTask}
           onFieldsChange={checkUrgent}
           labelCol={{ span: 3 }}
