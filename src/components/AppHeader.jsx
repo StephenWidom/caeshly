@@ -46,7 +46,7 @@ const AppHeader = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isWithdrawalsVisible, setIsWithdrawlsVisible] = useState(false);
   const [days] = useContext(DaysContext);
-  const [date, setDate] = useContext(DayContext);
+  const [, setDate] = useContext(DayContext);
   const [cash] = useContext(CashContext);
   const [withdrawals] = useContext(WithdrawalsContext);
 

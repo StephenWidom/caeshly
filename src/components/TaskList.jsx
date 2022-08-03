@@ -106,7 +106,7 @@ const TaskList = ({ list }) => {
   const [days, setDays] = useContext(DaysContext);
   const [date, setDate] = useContext(DayContext);
   const [cash, setCash] = useContext(CashContext);
-  const [withdrawals, setWithdrawals] = useContext(WithdrawalsContext);
+  const [, setWithdrawals] = useContext(WithdrawalsContext);
 
   const createExamples = async () => {
     const examples = (await import("../examples.js")).default;

@@ -11,10 +11,10 @@ import CashContext from "../contexts/CashContext";
 
 const Clear = () => {
   const [tasks, setTasks] = useContext(TasksContext);
-  const [date, setDate] = useContext(DayContext);
-  const [cash, setCash] = useContext(CashContext);
-  const [days, setDays] = useContext(DaysContext);
-  const [withdrawals, setWithDrawals] = useContext(WithdrawalsContext);
+  const [, setDate] = useContext(DayContext);
+  const [, setCash] = useContext(CashContext);
+  const [, setDays] = useContext(DaysContext);
+  const [, setWithDrawals] = useContext(WithdrawalsContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isResetModalVisible, setIsResetModalVisible] = useState(false);
 
