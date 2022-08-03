@@ -30,14 +30,6 @@ const App = () => {
   const [cash, setCash] = useLocalStorage("cash", { current: 0, total: 0 });
   const [withdrawals, setWithDrawals] = useLocalStorage("withdrawals", []);
 
-  useEffect(() => {
-    console.log("tasks changed", tasks);
-  }, [tasks]);
-
-  useEffect(() => {
-    console.log("days changed", days);
-  }, [days]);
-
   // Create first entry in days array
   useEffect(() => {
     if (!days.length) {
