@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocalStorage } from "react-use";
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
 import Home from "./components/Home";
 
@@ -11,6 +11,15 @@ import CashContext from "./contexts/CashContext";
 import WithdrawalsContext from "./contexts/WithdrawalsContext";
 
 import "antd/dist/antd.css";
+
+const StyledApp = styled.div`
+  ${(props) =>
+    props.isToday &&
+    `
+    background: #efe6b3;
+    min-height: 100vh;
+  `}
+`;
 
 const GlobalStyle = createGlobalStyle`
  .ant-list-sm .ant-list-item {
@@ -43,8 +52,13 @@ const App = () => {
     }
   }, [days]);
 
+  const isToday = useMemo(
+    () => new Date(date).toDateString() === new Date().toDateString(),
+    [date]
+  );
+
   return (
-    <div className="App">
+    <StyledApp className="App" isToday={isToday}>
       <GlobalStyle />
       <TasksContext.Provider value={[tasks, setTasks]}>
         <DayContext.Provider value={[date, setDate]}>
@@ -59,7 +73,7 @@ const App = () => {
           </DaysContext.Provider>
         </DayContext.Provider>
       </TasksContext.Provider>
-    </div>
+    </StyledApp>
   );
 };
 

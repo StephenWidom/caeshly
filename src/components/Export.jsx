@@ -33,7 +33,7 @@ const Export = () => {
 
   return (
     <Popconfirm onConfirm={exportData} title="Export data?">
-      <Button type="ghost" disabled={!tasks.length}>
+      <Button type="secondary" disabled={!tasks.length}>
         Export
       </Button>
     </Popconfirm>
