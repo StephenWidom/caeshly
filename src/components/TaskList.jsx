@@ -156,7 +156,7 @@ const TaskList = ({ list }) => {
   };
 
   const pushTask = (task) => {
-    const nextDay = new Date(moment(date).add(1, "days")).toISOString();
+    const nextDay = new Date(moment(date).add(1, "days")).toLocaleDateString();
     let updatedDays = [...days];
     const nextDayIndex = days.findIndex((d) => d.date === nextDay);
     if (nextDayIndex !== -1) {
@@ -326,7 +326,7 @@ const TaskList = ({ list }) => {
                         !task.repeatable &&
                         !taskFromDay.done && (
                           <Popconfirm
-                            title="Move this task to the following day?"
+                            title="Move this task to today?"
                             onConfirm={() => pushTask(task)}
                           >
                             <Button icon={<ArrowRightOutlined />}></Button>

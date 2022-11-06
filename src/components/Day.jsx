@@ -22,7 +22,9 @@ const Day = () => {
   const [tasks] = useContext(TasksContext);
 
   const prevDay = () => {
-    const dayBefore = new Date(moment(date).subtract(1, "days")).toISOString();
+    const dayBefore = new Date(
+      moment(date).subtract(1, "days")
+    ).toLocaleDateString();
     if (!days.some((d) => d.date === dayBefore)) {
       setDays(
         produce(days, (draft) => {
@@ -38,7 +40,7 @@ const Day = () => {
   };
 
   const nextDay = () => {
-    const nextDay = new Date(moment(date).add(1, "days")).toISOString();
+    const nextDay = new Date(moment(date).add(1, "days")).toLocaleDateString();
     if (!days.some((d) => d.date === nextDay)) {
       setDays(
         produce(days, (draft) => {

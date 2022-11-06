@@ -43,7 +43,7 @@ const App = () => {
   useEffect(() => {
     if (!days.length) {
       const today = {
-        date: new Date().toISOString(),
+        date: new Date().toLocaleDateString(),
         dailyTasks: [],
         cash: 0,
       };
