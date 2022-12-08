@@ -1,0 +1,9 @@
+.ant-list-sm .ant-list-item {
+  padding: 8px 0;
+}
+
+@media screen and (max-width: 40em) {
+  .ant-drawer-right.ant-drawer-open .ant-drawer-content-wrapper {
+    max-width: 100%;
+  }
+}
