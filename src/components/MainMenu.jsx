@@ -14,19 +14,21 @@ import SubtasksContext from "../contexts/SubtasksContext";
 import WithdrawalsContext from "../contexts/WithdrawalsContext";
 import DateContext from "../contexts/DateContext";
 
+const FILE_VERSION = "2.0.0";
+
 const MainMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCashOpen, setIsCashOpen] = useState(false);
   const [isWithdrawalsOpen, setIsWithdrawalsOpen] = useState(false);
   const [isTagsOpen, setIsTagsOpen] = useState(false);
 
-  const { tasks } = useContext(TasksContext);
-  const [cash] = useContext(CashContext);
-  const [days] = useContext(DaysContext);
-  const { tags } = useContext(TagsContext);
-  const [subtasks] = useContext(SubtasksContext);
-  const [withdrawals] = useContext(WithdrawalsContext);
-  const [date] = useContext(DateContext);
+  const { tasks, setTasks } = useContext(TasksContext);
+  const [cash, setCash] = useContext(CashContext);
+  const [days, setDays] = useContext(DaysContext);
+  const { tags, setTags } = useContext(TagsContext);
+  const [subtasks, setSubtasks] = useContext(SubtasksContext);
+  const [withdrawals, setWithdrawals] = useContext(WithdrawalsContext);
+  const [date, setDate] = useContext(DateContext);
 
   const openMenu = () => setIsMenuOpen(true);
   const handleMenuClick = ({ key }) => {
@@ -39,6 +41,8 @@ const MainMenu = () => {
         return setIsWithdrawalsOpen(true);
       case "export":
         return exportData();
+      case "import":
+        return showFileSelector();
     }
   };
 
@@ -51,6 +55,7 @@ const MainMenu = () => {
       withdrawals,
       tags,
       subtasks,
+      version: FILE_VERSION,
     };
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
       JSON.stringify(data)
@@ -60,6 +65,35 @@ const MainMenu = () => {
     link.download = "caeshly.json";
     link.click();
     message.success("Data exported");
+  };
+
+  const showFileSelector = () => document.querySelector("#importFile").click();
+
+  const importData = (e) => {
+    const file = e?.target?.files[0];
+    if (!file) return message.warning("Please provide a file");
+    if (file.type !== "application/json")
+      return message.warning("Only JSON files allowed");
+
+    const fileReader = new FileReader();
+    fileReader.readAsText(file, "UTF-8");
+    fileReader.onload = (e) => {
+      if (!e?.target?.result)
+        return message.warning("Does not seem like a valid Caeshly file");
+
+      const data = JSON.parse(e.target.result);
+      if (data?.version !== FILE_VERSION)
+        return message.warning(`File version ${FILE_VERSION} required`);
+      const { tasks, cash, days, date, withdrawals, tags, subtasks } = data;
+      setTasks(tasks);
+      setCash(cash);
+      setDays(days);
+      setDate(date);
+      setWithdrawals(withdrawals);
+      setTags(tags);
+      setSubtasks(subtasks);
+      return message.success("Data imported");
+    };
   };
 
   return (
@@ -101,6 +135,9 @@ const MainMenu = () => {
         />
         <TagsMenu open={isTagsOpen} closeDrawer={() => setIsTagsOpen(false)} />
       </Drawer>
+      <div style={{ display: "none" }}>
+        <input type="file" id="importFile" onChange={importData} />
+      </div>
     </>
   );
 };
