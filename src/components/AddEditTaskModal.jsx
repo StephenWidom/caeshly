@@ -12,6 +12,7 @@ import {
   Tag,
   Typography,
 } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { uniqueId } from "lodash";
 
 import TasksContext from "../contexts/TasksContext";
@@ -32,7 +33,7 @@ const AddEditTaskModal = (props) => {
     setAddModalVisibility,
     setTask,
   } = useContext(TasksContext);
-  const { tags } = useContext(TagsContext);
+  const { tags, setTagModalVisibility } = useContext(TagsContext);
   const [days, setDays] = useContext(DaysContext);
   const [date] = useContext(DateContext);
 
@@ -189,6 +190,12 @@ const AddEditTaskModal = (props) => {
                   {name}
                 </CheckableTag>
               ))}
+              <Button
+                size="small"
+                type="ghost"
+                icon={<PlusOutlined />}
+                onClick={() => setTagModalVisibility(true)}
+              />
             </Space>
           ) : (
             <Typography>No tags.</Typography>
