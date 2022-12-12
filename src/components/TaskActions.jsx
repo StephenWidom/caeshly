@@ -189,7 +189,12 @@ const TaskActions = ({ task }) => {
   const menuProps = {
     items: [
       { key: "edit", icon: <EditOutlined />, label: "Edit task" },
-      { key: "undo", icon: <UndoOutlined />, label: "Undo task" },
+      {
+        key: "undo",
+        icon: <UndoOutlined />,
+        label: "Undo task",
+        disabled: !taskFromDay.done,
+      },
       {
         key: "move-parent",
         icon: <ArrowRightOutlined />,
@@ -216,10 +221,20 @@ const TaskActions = ({ task }) => {
         destroyPopupOnHide={true}
         trigger={["click"]}
         menu={menuProps}
-        onClick={completeTask}
+        onClick={() => {
+          if (taskFromDay.done && !task.repeatable) {
+            undoTask();
+          } else {
+            completeTask();
+          }
+        }}
         size="small"
       >
-        <CheckOutlined />
+        {taskFromDay.done && !task.repeatable ? (
+          <UndoOutlined />
+        ) : (
+          <CheckOutlined />
+        )}
       </Dropdown.Button>
     </>
   );
