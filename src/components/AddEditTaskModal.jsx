@@ -6,6 +6,7 @@ import {
   Form,
   InputNumber,
   Input,
+  Space,
   Checkbox,
   message,
   Tag,
@@ -19,7 +20,6 @@ import DaysContext from "../contexts/DaysContext";
 import DateContext from "../contexts/DateContext";
 
 import { getNextArrId } from "../utils";
-import Item from "antd/es/list/Item";
 
 const AddEditTaskModal = (props) => {
   const [selectedTags, setSelectedTags] = useState([]);
@@ -178,16 +178,18 @@ const AddEditTaskModal = (props) => {
         <>
           <Typography.Title level={5}>Tags</Typography.Title>
           {!!tags?.length ? (
-            tags.map(({ name, id, color }) => (
-              <CheckableTag
-                key={name}
-                color={color}
-                checked={selectedTags.includes(id)}
-                onChange={() => handleTagCheck(id)}
-              >
-                {name}
-              </CheckableTag>
-            ))
+            <Space wrap>
+              {tags.map(({ name, id, color }) => (
+                <CheckableTag
+                  key={name}
+                  color={color}
+                  checked={selectedTags.includes(id)}
+                  onChange={() => handleTagCheck(id)}
+                >
+                  {name}
+                </CheckableTag>
+              ))}
+            </Space>
           ) : (
             <Typography>No tags.</Typography>
           )}
