@@ -21,6 +21,7 @@ import {
 
 const StyledDateCard = styled(Card)`
   margin: 10px 0;
+  border-color: #999;
 
   h3 {
     margin-bottom: 0;

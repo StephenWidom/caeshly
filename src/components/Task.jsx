@@ -22,14 +22,14 @@ import {
 } from "../utils";
 
 const StyledTask = styled(Card)`
-  border-radius: 0;
-  border-color: #999;
+  border-radius: 3px;
+  border: 0;
   transition: all 0.2s ease;
+  box-shadow: 0 1px 0 #091e4240;
 
   ${({ $urgent }) =>
     !!$urgent &&
     `
-  border-color: #f73454; 
   background: #fadada;
 `}
 
@@ -37,7 +37,6 @@ const StyledTask = styled(Card)`
     !!$complete &&
     `
     opacity: 0.65;
-    border-color: #e5e6e7;
   `}
 `;
 

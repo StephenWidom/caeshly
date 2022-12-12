@@ -10,6 +10,13 @@ import DateContext from "../contexts/DateContext";
 
 const StyledTaskList = styled.div`
   margin: 20px 0;
+  padding: 8px 8px 16px;
+  background: #ebecf0;
+  border-radius: 3px;
+
+  .ant-typography {
+    padding: 4px;
+  }
 `;
 
 const TaskList = ({ permanent, tasks }) => {
