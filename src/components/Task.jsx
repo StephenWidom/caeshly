@@ -23,6 +23,29 @@ import {
 
 const StyledTask = styled(Card)`
   border-radius: 0;
+  border-color: #999;
+  transition: all 0.2s ease;
+
+  ${({ $even }) =>
+    !!$even &&
+    `
+    background: #fafdf9;
+    border-color: #999;
+  `}
+
+  ${({ $urgent }) =>
+    !!$urgent &&
+    `
+  border-color: #f73454; 
+  background: #fadada;
+`}
+
+  ${({ $complete }) =>
+    !!$complete &&
+    `
+    opacity: 0.65;
+    border-color: #e5e6e7;
+  `}
 `;
 
 const StyledCardContent = styled.div`
@@ -32,7 +55,7 @@ const StyledCardContent = styled.div`
   padding: 12px;
 `;
 
-const Task = ({ task }) => {
+const Task = ({ task, even }) => {
   const [date] = useContext(DateContext);
   const [days] = useContext(DaysContext);
   const { subtasks } = useContext(TasksContext);
@@ -52,6 +75,9 @@ const Task = ({ task }) => {
         size="small"
         extra={<TaskActions task={task} />}
         bodyStyle={{ padding: 0 }}
+        $complete={taskFromDay.done && !task.repeatable}
+        $even={even}
+        $urgent={task.urgent}
       >
         <StyledCardContent>
           <Typography.Text>

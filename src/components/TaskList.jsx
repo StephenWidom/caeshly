@@ -51,8 +51,8 @@ const TaskList = ({ permanent, tasks }) => {
       </Typography.Title>
       {!!thisDaysTasks?.length ? (
         <Space size="middle" direction="vertical" style={{ display: "flex" }}>
-          {thisDaysTasks.map((task) => (
-            <Task task={task} key={task.name} />
+          {thisDaysTasks.map((task, i) => (
+            <Task task={task} key={task.name} even={i % 2 === 0} />
           ))}
         </Space>
       ) : (
