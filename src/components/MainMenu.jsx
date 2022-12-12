@@ -71,19 +71,19 @@ const MainMenu = () => {
 
   const importData = (e) => {
     const file = e?.target?.files[0];
-    if (!file) return message.warning("Please provide a file");
+    if (!file) return message.error("Please provide a file");
     if (file.type !== "application/json")
-      return message.warning("Only JSON files allowed");
+      return message.error("Only JSON files allowed");
 
     const fileReader = new FileReader();
     fileReader.readAsText(file, "UTF-8");
     fileReader.onload = (e) => {
       if (!e?.target?.result)
-        return message.warning("Does not seem like a valid Caeshly file");
+        return message.error("Does not seem like a valid Caeshly file");
 
       const data = JSON.parse(e.target.result);
       if (data?.version !== FILE_VERSION)
-        return message.warning(`File version ${FILE_VERSION} required`);
+        return message.error(`File version ${FILE_VERSION} required`);
       const { tasks, cash, days, date, withdrawals, tags, subtasks } = data;
       setTasks(tasks);
       setCash(cash);

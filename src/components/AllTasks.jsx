@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import styled from "styled-components";
 import produce from "immer";
 import flatten from "lodash/flatten";
 import { message, Typography, Card, Divider } from "antd";
@@ -10,6 +11,10 @@ import TasksContext from "../contexts/TasksContext";
 import DaysContext from "../contexts/DaysContext";
 import TagsContext from "../contexts/TagsContext";
 import DateContext from "../contexts/DateContext";
+
+const StyledContainer = styled(Container)`
+  padding-bottom: 20px;
+`;
 
 const AllTasks = ({ groupedTasks }) => {
   const { setTasks, setSubtasks } = useContext(TasksContext);
@@ -50,7 +55,7 @@ const AllTasks = ({ groupedTasks }) => {
   };
 
   return (
-    <Container>
+    <StyledContainer>
       {!!flatten(groupedTasks)?.length ? (
         groupedTasks.map((group, index) => (
           <div key={`tasklistcontainer-${index}`}>
@@ -82,7 +87,7 @@ const AllTasks = ({ groupedTasks }) => {
           </div>
         </Card>
       )}
-    </Container>
+    </StyledContainer>
   );
 };
 
