@@ -26,13 +26,6 @@ const StyledTask = styled(Card)`
   border-color: #999;
   transition: all 0.2s ease;
 
-  ${({ $even }) =>
-    !!$even &&
-    `
-    background: #fafdf9;
-    border-color: #999;
-  `}
-
   ${({ $urgent }) =>
     !!$urgent &&
     `
@@ -55,7 +48,7 @@ const StyledCardContent = styled.div`
   padding: 12px;
 `;
 
-const Task = ({ task, even }) => {
+const Task = ({ task }) => {
   const [date] = useContext(DateContext);
   const [days] = useContext(DaysContext);
   const { subtasks } = useContext(TasksContext);
@@ -76,7 +69,6 @@ const Task = ({ task, even }) => {
         extra={<TaskActions task={task} />}
         bodyStyle={{ padding: 0 }}
         $complete={taskFromDay.done && !task.repeatable}
-        $even={even}
         $urgent={task.urgent}
       >
         <StyledCardContent>

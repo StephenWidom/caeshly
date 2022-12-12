@@ -18,7 +18,7 @@ const TaskList = ({ permanent, tasks }) => {
 
   const currentDay = useMemo(
     () => days.find((d) => d.date === date),
-    [date, days]
+    [date, days, tasks]
   );
 
   const isDateToday = useMemo(
@@ -27,6 +27,7 @@ const TaskList = ({ permanent, tasks }) => {
   );
 
   const thisDaysTasks = useMemo(() => {
+    if (!currentDay) return console.error("currentDay is undefined");
     if (permanent) return orderBy(tasks, ["urgent", "money"], ["desc", "desc"]);
 
     const dailyTaskIds = currentDay.dailyTasks.map((t) => t.taskId);
@@ -37,7 +38,7 @@ const TaskList = ({ permanent, tasks }) => {
     );
   }, [date, tasks, days]);
 
-  return (
+  return currentDay ? (
     <StyledTaskList>
       <Typography.Title level={5}>
         {permanent
@@ -51,15 +52,15 @@ const TaskList = ({ permanent, tasks }) => {
       </Typography.Title>
       {!!thisDaysTasks?.length ? (
         <Space size="middle" direction="vertical" style={{ display: "flex" }}>
-          {thisDaysTasks.map((task, i) => (
-            <Task task={task} key={task.name} even={i % 2 === 0} />
+          {thisDaysTasks.map((task) => (
+            <Task task={task} key={task.name} />
           ))}
         </Space>
       ) : (
         <Typography.Text>No tasks</Typography.Text>
       )}
     </StyledTaskList>
-  );
+  ) : null;
 };
 
 export default TaskList;

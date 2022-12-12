@@ -1,4 +1,5 @@
 import React, { useContext, useMemo } from "react";
+import produce from "immer";
 import styled from "styled-components";
 import { Space, Typography, Button, Affix } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
@@ -9,6 +10,9 @@ import { FlexContainer } from "./Layout";
 
 import TasksContext from "../contexts/TasksContext";
 import DateContext from "../contexts/DateContext";
+import DaysContext from "../contexts/DaysContext";
+
+import { doesDateExist, getStartingDailyTasks } from "../utils";
 
 const StyledHeader = styled.div`
   padding: 12px 0;
@@ -25,13 +29,30 @@ const StyledHeader = styled.div`
 `;
 
 const AppHeader = () => {
-  const { setAddModalVisibility } = useContext(TasksContext);
+  const { tasks, setAddModalVisibility } = useContext(TasksContext);
   const [date, setDate] = useContext(DateContext);
+  const [days, setDays] = useContext(DaysContext);
 
   const isDateToday = useMemo(
     () => new Date().toLocaleDateString() === date,
     [date]
   );
+
+  const goToToday = () => {
+    const today = new Date().toLocaleDateString();
+    if (!doesDateExist(days, today)) {
+      setDays(
+        produce(days, (draft) => {
+          draft.unshift({
+            date: today,
+            dailyTasks: getStartingDailyTasks(tasks),
+            cash: 0,
+          });
+        })
+      );
+    }
+    setDate(today);
+  };
 
   return (
     <Affix offsetTop={0} className="AppHeader">
@@ -44,7 +65,7 @@ const AppHeader = () => {
               icon={<CalendarOutlined />}
               shape="circle"
               disabled={isDateToday}
-              onClick={() => setDate(new Date().toLocaleDateString())}
+              onClick={goToToday}
             />
             <MainMenu />
           </Space>
