@@ -7,6 +7,7 @@ import AddEditTaskModal from "./components/AddEditTaskModal";
 import AddEditTagModal from "./components/AddEditTagModal";
 import AllTasks from "./components/AllTasks";
 import DateCard from "./components/DateCard";
+import DeleteDataModal from "./components/DeleteDataModal";
 
 import TasksContext from "./contexts/TasksContext";
 import SubtasksContext from "./contexts/SubtasksContext";
@@ -46,6 +47,7 @@ const App = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [isTagModalVisible, setIsTagModalVisible] = useState(false);
   const [selectedTag, setSelectedTag] = useState(null);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   // Memoize grouped lists of tasks
   const groupedTasks = useMemo(() => {
@@ -81,6 +83,7 @@ const App = () => {
   const setTagModalVisibility = (isTagModalVisible) =>
     setIsTagModalVisible(isTagModalVisible);
   const setTag = (tag) => setSelectedTag(tag);
+  const setDeleteVisibility = (isVisible) => setIsDeleteModalVisible(isVisible);
 
   return (
     <>
@@ -113,11 +116,15 @@ const App = () => {
                   <WithdrawalsContext.Provider
                     value={[withdrawals, setWithDrawals]}
                   >
-                    <AppHeader />
+                    <AppHeader setDeleteVisibility={setDeleteVisibility} />
                     <DateCard />
                     <AddEditTaskModal />
                     <AddEditTagModal />
                     <AllTasks groupedTasks={groupedTasks} />
+                    <DeleteDataModal
+                      isDeleteModalVisible={isDeleteModalVisible}
+                      setDeleteVisibility={setDeleteVisibility}
+                    />
                   </WithdrawalsContext.Provider>
                 </CashContext.Provider>
               </DaysContext.Provider>

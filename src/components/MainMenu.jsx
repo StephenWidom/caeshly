@@ -16,7 +16,7 @@ import DateContext from "../contexts/DateContext";
 
 const FILE_VERSION = "2.0.0";
 
-const MainMenu = () => {
+const MainMenu = ({ setDeleteVisibility }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCashOpen, setIsCashOpen] = useState(false);
   const [isWithdrawalsOpen, setIsWithdrawalsOpen] = useState(false);
@@ -43,6 +43,8 @@ const MainMenu = () => {
         return exportData();
       case "import":
         return showFileSelector();
+      case "delete":
+        return setDeleteVisibility(true);
     }
   };
 
@@ -120,6 +122,7 @@ const MainMenu = () => {
                 { key: "import", label: "Import JSON" },
               ],
             },
+            { key: "delete", label: "Delete Data", danger: true },
           ]}
           onClick={handleMenuClick}
         />

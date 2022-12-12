@@ -28,7 +28,7 @@ const StyledHeader = styled.div`
   }
 `;
 
-const AppHeader = () => {
+const AppHeader = ({ setDeleteVisibility }) => {
   const { tasks, setAddModalVisibility } = useContext(TasksContext);
   const [date, setDate] = useContext(DateContext);
   const [days, setDays] = useContext(DaysContext);
@@ -67,7 +67,7 @@ const AppHeader = () => {
               disabled={isDateToday}
               onClick={goToToday}
             />
-            <MainMenu />
+            <MainMenu setDeleteVisibility={setDeleteVisibility} />
           </Space>
         </FlexContainer>
       </StyledHeader>
