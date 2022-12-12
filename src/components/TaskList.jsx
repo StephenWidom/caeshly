@@ -27,7 +27,7 @@ const TaskList = ({ permanent, tasks }) => {
   );
 
   const thisDaysTasks = useMemo(() => {
-    if (permanent) return tasks;
+    if (permanent) return orderBy(tasks, ["urgent", "money"], ["desc", "desc"]);
 
     const dailyTaskIds = currentDay.dailyTasks.map((t) => t.taskId);
     return orderBy(
