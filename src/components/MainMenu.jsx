@@ -26,7 +26,7 @@ const MainMenu = ({ setDeleteVisibility }) => {
   const [cash, setCash] = useContext(CashContext);
   const [days, setDays] = useContext(DaysContext);
   const { tags, setTags } = useContext(TagsContext);
-  const [subtasks, setSubtasks] = useContext(SubtasksContext);
+  const { subtasks, setSubtasks } = useContext(SubtasksContext);
   const [withdrawals, setWithdrawals] = useContext(WithdrawalsContext);
   const [date, setDate] = useContext(DateContext);
 

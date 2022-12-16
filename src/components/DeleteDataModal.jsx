@@ -14,7 +14,7 @@ const DeleteDataModal = ({ isDeleteModalVisible, setDeleteVisibility }) => {
   const [, setCash] = useContext(CashContext);
   const [, setDays] = useContext(DaysContext);
   const { setTags } = useContext(TagsContext);
-  const [, setSubtasks] = useContext(SubtasksContext);
+  const { setSubtasks } = useContext(SubtasksContext);
   const [, setWithdrawals] = useContext(WithdrawalsContext);
   const [, setDate] = useContext(DateContext);
 

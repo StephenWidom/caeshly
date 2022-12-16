@@ -5,6 +5,7 @@ import partition from "lodash/partition";
 import AppHeader from "./components/AppHeader";
 import AddEditTaskModal from "./components/AddEditTaskModal";
 import AddEditTagModal from "./components/AddEditTagModal";
+import AddEditSubtaskModal from "./components/AddEditSubtaskModal";
 import AllTasks from "./components/AllTasks";
 import DateCard from "./components/DateCard";
 import DeleteDataModal from "./components/DeleteDataModal";
@@ -48,6 +49,8 @@ const App = () => {
   const [isTagModalVisible, setIsTagModalVisible] = useState(false);
   const [selectedTag, setSelectedTag] = useState(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [isSubtaskModalVisible, setIsSubtaskModalVisible] = useState(false);
+  const [selectedSubtasks, setSelectedSubtasks] = useState([]);
 
   // Memoize grouped lists of tasks
   const groupedTasks = useMemo(() => {
@@ -60,6 +63,14 @@ const App = () => {
   useEffect(() => console.log("days changed", days), [days]);
   useEffect(() => console.log("date changed", date), [date]);
   useEffect(() => console.log("tags changed", tags), [tags]);
+  useEffect(
+    () => console.log("selectedSubtasks changed", selectedSubtasks),
+    [selectedSubtasks]
+  );
+  useEffect(
+    () => console.log("isSubtaskModalVisible changed", isSubtaskModalVisible),
+    [isSubtaskModalVisible]
+  );
   useEffect(
     () => console.log("withdrawals changed", withdrawals),
     [withdrawals]
@@ -84,6 +95,9 @@ const App = () => {
     setIsTagModalVisible(isTagModalVisible);
   const setTag = (tag) => setSelectedTag(tag);
   const setDeleteVisibility = (isVisible) => setIsDeleteModalVisible(isVisible);
+  const setSubtaskModalVisibility = (isVisible) =>
+    setIsSubtaskModalVisible(isVisible);
+  const setCurrentSubtasks = (subtasks) => setSelectedSubtasks(subtasks);
 
   return (
     <>
@@ -99,7 +113,16 @@ const App = () => {
           setTask,
         }}
       >
-        <SubtasksContext.Provider value={[subtasks, setSubtasks]}>
+        <SubtasksContext.Provider
+          value={{
+            subtasks,
+            setSubtasks,
+            setSubtaskModalVisibility,
+            isSubtaskModalVisible,
+            setCurrentSubtasks,
+            selectedSubtasks,
+          }}
+        >
           <TagsContext.Provider
             value={{
               tags,
@@ -120,6 +143,7 @@ const App = () => {
                     <DateCard />
                     <AddEditTaskModal />
                     <AddEditTagModal />
+                    <AddEditSubtaskModal />
                     <AllTasks groupedTasks={groupedTasks} />
                     <DeleteDataModal
                       isDeleteModalVisible={isDeleteModalVisible}

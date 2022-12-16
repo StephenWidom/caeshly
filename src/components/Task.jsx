@@ -1,6 +1,7 @@
 import React, { useContext, useMemo } from "react";
 import styled from "styled-components";
-import { Card, Typography, Collapse } from "antd";
+import produce from "immer";
+import { Card, Typography, Collapse, Checkbox, message, Space } from "antd";
 import {
   CheckSquareOutlined,
   DollarOutlined,
@@ -12,7 +13,8 @@ import Tag from "./Tag";
 
 import DateContext from "../contexts/DateContext";
 import DaysContext from "../contexts/DaysContext";
-import TasksContext from "../contexts/TasksContext";
+import CashContext from "../contexts/CashContext";
+import SubtasksContext from "../contexts/SubtasksContext";
 
 import {
   formatAsCash,
@@ -49,16 +51,57 @@ const StyledCardContent = styled.div`
 
 const Task = ({ task }) => {
   const [date] = useContext(DateContext);
-  const [days] = useContext(DaysContext);
-  const { subtasks } = useContext(TasksContext);
+  const [days, setDays] = useContext(DaysContext);
+  const { subtasks } = useContext(SubtasksContext);
+  const [cash, setCash] = useContext(CashContext);
 
   const { Panel } = Collapse;
 
-  const { name, money, permanent, repeatable, urgent } = task;
+  const { name, money } = task;
   const taskFromDay = useMemo(
     () => getTaskFromDay(task, getCurrentDayObj(date, days)),
     [task, days]
   );
+
+  const updateSubtask = (e, subtask) => {
+    if (e.target.checked) {
+      // Subtask has been completed
+      setDays(
+        produce(days, (draft) => {
+          const todayIndex = days.findIndex((d) => d.date === date);
+          if (todayIndex === -1)
+            return console.error("Could not find todayIndex");
+
+          draft[todayIndex].cash += subtask.money;
+        })
+      );
+      setCash(
+        produce(cash, (draft) => {
+          draft.current += subtask.money;
+          draft.total += subtask.money;
+        })
+      );
+      message.success(`${formatAsCash(subtask?.money)} added!`);
+    } else {
+      // Subtask un-completed
+      setDays(
+        produce(days, (draft) => {
+          const todayIndex = days.findIndex((d) => d.date === date);
+          if (todayIndex === -1)
+            return console.error("Could not find todayIndex");
+
+          draft[todayIndex].cash -= subtask.money;
+        })
+      );
+      setCash(
+        produce(cash, (draft) => {
+          draft.current -= subtask.money;
+          draft.total -= subtask.money;
+        })
+      );
+      message.warning(`${formatAsCash(subtask?.money)} removed`);
+    }
+  };
 
   return (
     taskFromDay && (
@@ -93,10 +136,21 @@ const Task = ({ task }) => {
         {!!task?.subtasks.length && (
           <Collapse bordered={false}>
             <Panel header="Subtasks">
-              {task.subtasks.map((subtaskId) => {
-                const thisSubtask = getSubtask(subtaskId, subtasks);
-                return <div key={subtaskId + task.id}>{thisSubtask.name}</div>;
-              })}
+              <Space direction="vertical">
+                {task.subtasks.map((subtaskId) => {
+                  const thisSubtask = getSubtask(subtaskId, subtasks);
+                  return (
+                    !!thisSubtask && (
+                      <Checkbox
+                        onChange={(e) => updateSubtask(e, thisSubtask)}
+                        key={subtaskId + task.id}
+                      >
+                        {thisSubtask.name} ({formatAsCash(thisSubtask.money)})
+                      </Checkbox>
+                    )
+                  );
+                })}
+              </Space>
             </Panel>
           </Collapse>
         )}
