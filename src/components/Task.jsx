@@ -60,7 +60,7 @@ const Task = ({ task }) => {
   const { name, money } = task;
   const taskFromDay = useMemo(
     () => getTaskFromDay(task, getCurrentDayObj(date, days)),
-    [task, days]
+    [task, days, date]
   );
 
   const updateSubtask = (e, subtask) => {
@@ -73,6 +73,14 @@ const Task = ({ task }) => {
             return console.error("Could not find todayIndex");
 
           draft[todayIndex].cash += subtask.money;
+
+          const thisSubtaskInDayIndex = draft[
+            todayIndex
+          ].dailySubtasks.findIndex((s) => s.subtaskId === subtask.id);
+          if (thisSubtaskInDayIndex === -1)
+            return console.error("Could not find thisSubtaskInDayIndex");
+
+          draft[todayIndex].dailySubtasks[thisSubtaskInDayIndex].done = 1;
         })
       );
       setCash(
@@ -91,6 +99,14 @@ const Task = ({ task }) => {
             return console.error("Could not find todayIndex");
 
           draft[todayIndex].cash -= subtask.money;
+
+          const thisSubtaskInDayIndex = draft[
+            todayIndex
+          ].dailySubtasks.findIndex((s) => s.subtaskId === subtask.id);
+          if (thisSubtaskInDayIndex === -1)
+            return console.error("Could not find thisSubtaskInDayIndex");
+
+          draft[todayIndex].dailySubtasks[thisSubtaskInDayIndex].done = 0;
         })
       );
       setCash(
@@ -102,6 +118,12 @@ const Task = ({ task }) => {
       message.warning(`${formatAsCash(subtask?.money)} removed`);
     }
   };
+
+  const todayObject = useMemo(() => getCurrentDayObj(date, days), [date, days]);
+
+  const subtaskComplete = (subtaskId) =>
+    !!todayObject?.dailySubtasks &&
+    todayObject?.dailySubtasks.find((s) => s.subtaskId === subtaskId)?.done;
 
   return (
     taskFromDay && (
@@ -144,6 +166,7 @@ const Task = ({ task }) => {
                       <Checkbox
                         onChange={(e) => updateSubtask(e, thisSubtask)}
                         key={subtaskId + task.id}
+                        checked={subtaskComplete(subtaskId)}
                       >
                         {thisSubtask.name} ({formatAsCash(thisSubtask.money)})
                       </Checkbox>

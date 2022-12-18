@@ -16,6 +16,14 @@ export const getStartingDailyTasks = (tasks) =>
     return acc;
   }, []);
 
+export const getStartingDailySubtasks = (tasks) =>
+  tasks.reduce((acc, curr) => {
+    curr.subtasks.map((subtaskId) => {
+      acc.push({ subtaskId, done: 0 });
+    });
+    return acc;
+  }, []);
+
 export const getCurrentDayObj = (date, days) => {
   return days.find((d) => d.date === date);
 };

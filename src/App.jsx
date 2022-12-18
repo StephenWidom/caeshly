@@ -36,6 +36,7 @@ const App = () => {
     {
       date: new Date().toLocaleDateString(),
       dailyTasks: [],
+      dailySubtasks: [],
       cash: 0,
     },
   ]);

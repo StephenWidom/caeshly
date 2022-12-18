@@ -101,6 +101,11 @@ const AddEditTaskModal = (props) => {
       );
       setSubtasks([...subtasks, ...subtasksToBeCreated]);
 
+      const subtasksToAdd = subtasksToBeCreated.map((s) => ({
+        subtaskId: s.id,
+        done: 0,
+      }));
+
       setTasks(
         produce(tasks, (draft) => {
           draft[thisTaskIndex] = {
@@ -115,6 +120,23 @@ const AddEditTaskModal = (props) => {
           };
         })
       );
+
+      if (permanent) {
+        setDays(
+          days.map((day) => ({
+            ...day,
+            dailySubtasks: [...day.dailySubtasks, ...subtasksToAdd],
+          }))
+        );
+      } else {
+        setDays(
+          produce(days, (draft) => {
+            const todayIndex = days.findIndex((d) => d.date === date);
+            if (todayIndex !== -1)
+              draft[todayIndex].dailySubtasks.push(...subtasksToAdd);
+          })
+        );
+      }
     } else {
       const thisTaskSubtasks = !!selectedSubtasks.length
         ? selectedSubtasks.map((s) => s.id)
@@ -135,6 +157,12 @@ const AddEditTaskModal = (props) => {
       // Add subtasks
       setSubtasks([...subtasks, ...selectedSubtasks]);
 
+      // Mapped for daily tracking of completion
+      const subtasksToAdd = selectedSubtasks.map((s) => ({
+        subtaskId: s.id,
+        done: 0,
+      }));
+
       // Add new task to the tasks array
       setTasks([...tasks, newTask]);
 
@@ -144,14 +172,17 @@ const AddEditTaskModal = (props) => {
           days.map((day) => ({
             ...day,
             dailyTasks: [...day.dailyTasks, { taskId: newTaskId, done: 0 }],
+            dailySubtasks: [...day.dailySubtasks, ...subtasksToAdd],
           }))
         );
       } else {
         setDays(
           produce(days, (draft) => {
             const todayIndex = days.findIndex((d) => d.date === date);
-            if (todayIndex !== -1)
+            if (todayIndex !== -1) {
               draft[todayIndex].dailyTasks.push({ taskId: newTaskId, done: 0 });
+              draft[todayIndex].dailySubtasks.push(...subtasksToAdd);
+            }
           })
         );
       }

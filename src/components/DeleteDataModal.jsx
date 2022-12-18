@@ -28,6 +28,7 @@ const DeleteDataModal = ({ isDeleteModalVisible, setDeleteVisibility }) => {
       {
         date: today,
         dailyTasks: [],
+        dailySubtasks: [],
         cash: 0,
       },
     ]);

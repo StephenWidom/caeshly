@@ -16,6 +16,7 @@ import {
   formatAsCash,
   formatAsDate,
   getCurrentDayObj,
+  getStartingDailySubtasks,
   getStartingDailyTasks,
 } from "../utils";
 
@@ -51,6 +52,7 @@ const DateCard = () => {
           draft.unshift({
             date: dayBefore,
             dailyTasks: getStartingDailyTasks(tasks),
+            dailySubtasks: getStartingDailySubtasks(tasks),
             cash: 0,
           });
         })
@@ -67,6 +69,7 @@ const DateCard = () => {
           draft.push({
             date: nextDay,
             dailyTasks: getStartingDailyTasks(tasks),
+            dailySubtasks: getStartingDailySubtasks(tasks),
             cash: 0,
           });
         })

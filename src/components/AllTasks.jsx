@@ -46,9 +46,17 @@ const AllTasks = ({ groupedTasks }) => {
         const todaysTasks = exampleTasks.map((t) => {
           return { taskId: t.id, done: 0 };
         });
+        const todaysSubtasks = exampleSubtasks.map((s) => ({
+          subtaskId: s.id,
+          done: 0,
+        }));
         draft[todayIndex].dailyTasks = todaysTasks;
+        draft[todayIndex].dailySubtasks = todaysSubtasks;
         draft.forEach((day, index) => {
-          if (index !== todayIndex) draft[index].dailyTasks = permTasks;
+          if (index !== todayIndex) {
+            draft[index].dailyTasks = permTasks;
+            draft[index].dailySubtasks = todaysSubtasks;
+          }
         });
       })
     );
