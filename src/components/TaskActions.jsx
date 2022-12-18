@@ -53,7 +53,7 @@ const TaskActions = ({ task }) => {
 
   const taskFromDay = useMemo(
     () => getTaskFromDay(task, getCurrentDayObj(date, days)),
-    [days]
+    [days, date]
   );
 
   const completeTask = () => {
