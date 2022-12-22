@@ -11,4 +11,10 @@ export default [
     money: 3,
     repeatable: false,
   },
+  {
+    id: 3,
+    name: "Merge PR",
+    money: 2,
+    repeatable: false,
+  },
 ];

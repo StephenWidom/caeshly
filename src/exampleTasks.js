@@ -31,13 +31,13 @@ export default [
   },
   {
     id: 4,
-    name: "Complete work presentation",
-    money: 3,
+    name: "Complete work on SOUR-3487",
+    money: 5,
     permanent: false,
     repeatable: false,
     urgent: true,
     tags: [3],
-    subtasks: [],
+    subtasks: [3],
   },
   {
     id: 5,

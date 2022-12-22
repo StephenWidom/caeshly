@@ -18,9 +18,11 @@ export const getStartingDailyTasks = (tasks) =>
 
 export const getStartingDailySubtasks = (tasks) =>
   tasks.reduce((acc, curr) => {
-    curr.subtasks.map((subtaskId) => {
-      acc.push({ subtaskId, done: 0 });
-    });
+    if (curr.permanent) {
+      curr.subtasks.map((subtaskId) => {
+        acc.push({ subtaskId, done: 0 });
+      });
+    }
     return acc;
   }, []);
 

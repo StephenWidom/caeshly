@@ -18,6 +18,7 @@ import DateContext from "../contexts/DateContext";
 import {
   formatAsCash,
   getCurrentDayObj,
+  getStartingDailySubtasks,
   getStartingDailyTasks,
   getTaskFromDay,
 } from "../utils";
@@ -135,6 +136,18 @@ const TaskActions = ({ task }) => {
           },
         ];
         updatedDaysArr[nextDayIndex].dailyTasks = newTasksArr;
+
+        // Same for subtasks
+        const subTasksInQuestion = task.subtasks.map((subtaskId) => ({
+          subtaskId,
+          done: 0,
+        }));
+
+        const newSubtasksArr = [
+          ...days[nextDayIndex].dailySubtasks,
+          ...subTasksInQuestion,
+        ];
+        updatedDaysArr[nextDayIndex].dailySubtasks = newSubtasksArr;
       } else {
         // If we're still not at our target date
         // Go again, create more days till we reach our target
@@ -142,16 +155,25 @@ const TaskActions = ({ task }) => {
       }
     } else {
       // If the following day DOES NOT exist yet
-      const newTasksArr = [...getStartingDailyTasks(tasks)];
       if (targetDate === nextDay) {
         // If we've reached our target date
         // Add the task
+        const newTasksArr = [...getStartingDailyTasks(tasks)];
         newTasksArr.push({ taskId: task.id, done: 0 });
+
+        // Same for subtasks
+        const newSubtasksArr = [...getStartingDailySubtasks(tasks)];
+        const subTasksInQuestion = task.subtasks.map((subtaskId) => ({
+          subtaskId,
+          done: 0,
+        }));
+
         updatedDaysArr = [
           ...days,
           {
             date: nextDay,
             dailyTasks: newTasksArr,
+            dailySubtasks: [...newSubtasksArr, ...subTasksInQuestion],
             cash: 0,
           },
         ];
@@ -167,11 +189,16 @@ const TaskActions = ({ task }) => {
     const newTasksArr = days[todayIndex].dailyTasks.filter(
       (t) => t.taskId !== task.id
     );
+    const newSubtasksArr = days[todayIndex].dailySubtasks.filter(
+      (subtask) => !task.subtasks.includes(subtask.subtaskId)
+    );
     let newTempDaysArr = [...updatedDaysArr];
     newTempDaysArr[todayIndex] = {
       ...newTempDaysArr[todayIndex],
       dailyTasks: newTasksArr,
+      dailySubtasks: newSubtasksArr,
     };
+
     setDays(newTempDaysArr);
     message.success("Task moved");
   };
