@@ -88,6 +88,7 @@ const TaskActions = ({ task }) => {
 
     // Check for streak
     if (task.permanent && taskFromDay.done === 0) {
+      // Only check on the first completion of a task
       let streak = 1;
       const todayIndex = days.findIndex((day) => day.date === date);
       if (todayIndex === -1) return console.error("Could not find todayIndex");
