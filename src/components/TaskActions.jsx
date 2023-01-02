@@ -65,7 +65,7 @@ const TaskActions = ({ task }) => {
 
     setDays(
       produce(days, (draft) => {
-        const todayIndex = days.findIndex((d) => d.date === date);
+        const todayIndex = days.findIndex((day) => day.date === date);
         if (todayIndex === -1)
           return console.error("Could not find todayIndex");
         const thisTaskIndex = days[todayIndex].dailyTasks.findIndex(
@@ -85,6 +85,33 @@ const TaskActions = ({ task }) => {
       })
     );
     message.success(`${formatAsCash(task?.money)} added!`);
+
+    // Check for streak
+    if (task.permanent && taskFromDay.done === 0) {
+      let streak = 1;
+      const todayIndex = days.findIndex((day) => day.date === date);
+      if (todayIndex === -1) return console.error("Could not find todayIndex");
+      for (let i = todayIndex - 1; i >= 0; i--) {
+        const tempTaskFromDay = getTaskFromDay(task, days[i]);
+        if (tempTaskFromDay.done) {
+          streak++;
+        } else {
+          break;
+        }
+      }
+
+      for (let i = todayIndex + 1; i <= days.length; i++) {
+        if (!days[i]) break;
+        const tempTaskFromDay = getTaskFromDay(task, days[i]);
+        if (tempTaskFromDay.done) {
+          streak++;
+        } else {
+          break;
+        }
+      }
+
+      if (streak > 1) message.success(`${streak} day streak!`);
+    }
   };
 
   const undoTask = () => {
