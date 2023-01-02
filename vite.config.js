@@ -5,9 +5,12 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    include: ["@ant-design/icons"],
+    include: ["@ant-design/icons", "antd"],
   },
   define: {
     global: {},
+  },
+  build: {
+    minify: "terser",
   },
 });
