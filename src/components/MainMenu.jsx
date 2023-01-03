@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Button, Drawer, Menu, message } from "antd";
+import { Button, Drawer, Menu, message, Typography } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 
 import CashMenu from "./CashMenu";
@@ -14,7 +14,7 @@ import SubtasksContext from "../contexts/SubtasksContext";
 import WithdrawalsContext from "../contexts/WithdrawalsContext";
 import DateContext from "../contexts/DateContext";
 
-const FILE_VERSION = "2.0.0";
+import { version as appVersion } from "../../package.json";
 
 const MainMenu = ({ setDeleteVisibility }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -57,7 +57,7 @@ const MainMenu = ({ setDeleteVisibility }) => {
       withdrawals,
       tags,
       subtasks,
-      version: FILE_VERSION,
+      version: appVersion,
     };
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
       JSON.stringify(data)
@@ -84,8 +84,10 @@ const MainMenu = ({ setDeleteVisibility }) => {
         return message.error("Does not seem like a valid Caeshly file");
 
       const data = JSON.parse(e.target.result);
-      if (data?.version !== FILE_VERSION)
-        return message.error(`File version ${FILE_VERSION} required`);
+      if (data?.version[0] !== 2)
+        return message.error(
+          `Outdate file version: ${version}. Must be at least v2.0.0`
+        );
       const { tasks, cash, days, date, withdrawals, tags, subtasks } = data;
       setTasks(tasks);
       setCash(cash);
@@ -106,6 +108,7 @@ const MainMenu = ({ setDeleteVisibility }) => {
         placement="right"
         onClose={() => setIsMenuOpen(false)}
         open={isMenuOpen}
+        footer={<Typography.Text>Cæshly v{appVersion}</Typography.Text>}
       >
         <Menu
           mode="inline"
