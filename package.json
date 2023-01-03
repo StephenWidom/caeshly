@@ -10,7 +10,7 @@
     "deploy": "scp -r dist/* $(grep REMOTE_DIR .env | cut -d '=' -f2)"
   },
   "dependencies": {
-    "antd": "^5.0.2",
+    "antd": "^4.24.7",
     "immer": "^9.0.16",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

@@ -18,7 +18,8 @@ import DaysContext from "./contexts/DaysContext";
 import CashContext from "./contexts/CashContext";
 import WithdrawalsContext from "./contexts/WithdrawalsContext";
 
-import "antd/dist/reset.css";
+import "antd/dist/antd.css";
+
 import "./App.css";
 
 const App = () => {
