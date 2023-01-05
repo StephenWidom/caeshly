@@ -1,7 +1,7 @@
 {
   "name": "caeshly",
   "private": true,
-  "version": "2.1.1",
+  "version": "2.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -23,6 +23,8 @@
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
     "@vitejs/plugin-react": "^2.2.0",
+    "eslint": "^8.31.0",
+    "eslint-plugin-better-mutation": "^1.4.0",
     "terser": "^5.16.1",
     "vite": "^3.2.3"
   }

@@ -21,6 +21,7 @@ import {
   getStartingDailySubtasks,
   getStartingDailyTasks,
   getTaskFromDay,
+  moveTask,
 } from "../utils";
 
 const TaskActions = ({ task }) => {
@@ -41,12 +42,12 @@ const TaskActions = ({ task }) => {
         return deleteTask();
       case "edit":
         return editTask();
-      case "move":
-        return moveTask(
+      case "move-one":
+        return moveTaskBoi(
           new Date(moment(date).add(1, "days")).toLocaleDateString()
         );
       case "move-today":
-        return moveTask();
+        return moveTaskBoi();
       case "undo":
         return undoTask();
     }
@@ -141,93 +142,8 @@ const TaskActions = ({ task }) => {
     message.warning(`${formatAsCash(task?.money)} removed`);
   };
 
-  const moveTask = (
-    targetDate = new Date().toLocaleDateString(),
-    newDate = date,
-    newDaysArr = days
-  ) => {
-    const nextDay = new Date(
-      moment(newDate).add(1, "days")
-    ).toLocaleDateString();
-    let updatedDaysArr = [...newDaysArr];
-    const nextDayIndex = days.findIndex((day) => day.date === nextDay);
-    if (nextDayIndex !== -1) {
-      // The following day DOES exist
-      if (targetDate === nextDay) {
-        // If we've reached our target date
-        // Add task to today's tasks
-        const newTasksArr = [
-          ...days[nextDayIndex].dailyTasks,
-          {
-            taskId: task.id,
-            done: 0,
-          },
-        ];
-        updatedDaysArr[nextDayIndex].dailyTasks = newTasksArr;
-
-        // Same for subtasks
-        const subTasksInQuestion = task.subtasks.map((subtaskId) => ({
-          subtaskId,
-          done: 0,
-        }));
-
-        const newSubtasksArr = [
-          ...days[nextDayIndex].dailySubtasks,
-          ...subTasksInQuestion,
-        ];
-        updatedDaysArr[nextDayIndex].dailySubtasks = newSubtasksArr;
-      } else {
-        // If we're still not at our target date
-        // Go again, create more days till we reach our target
-        return moveTask(targetDate, nextDay);
-      }
-    } else {
-      // If the following day DOES NOT exist yet
-      if (targetDate === nextDay) {
-        // If we've reached our target date
-        // Add the task
-        const newTasksArr = [...getStartingDailyTasks(tasks)];
-        newTasksArr.push({ taskId: task.id, done: 0 });
-
-        // Same for subtasks
-        const newSubtasksArr = [...getStartingDailySubtasks(tasks)];
-        const subTasksInQuestion = task.subtasks.map((subtaskId) => ({
-          subtaskId,
-          done: 0,
-        }));
-
-        updatedDaysArr = [
-          ...days,
-          {
-            date: nextDay,
-            dailyTasks: newTasksArr,
-            dailySubtasks: [...newSubtasksArr, ...subTasksInQuestion],
-            cash: 0,
-          },
-        ];
-      } else {
-        // Go again, create more days
-        return moveTask(targetDate, nextDay, updatedDaysArr);
-      }
-    }
-
-    // Remove task from current day
-    const todayIndex = days.findIndex((day) => day.date === date);
-    if (todayIndex === -1) return console.error("Cant find todayIndex");
-    const newTasksArr = days[todayIndex].dailyTasks.filter(
-      (t) => t.taskId !== task.id
-    );
-    const newSubtasksArr = days[todayIndex].dailySubtasks.filter(
-      (subtask) => !task.subtasks.includes(subtask.subtaskId)
-    );
-    let newTempDaysArr = [...updatedDaysArr];
-    newTempDaysArr[todayIndex] = {
-      ...newTempDaysArr[todayIndex],
-      dailyTasks: newTasksArr,
-      dailySubtasks: newSubtasksArr,
-    };
-
-    setDays(newTempDaysArr);
+  const moveTaskBoi = (targetDate = new Date().toLocaleDateString()) => {
+    setDays(moveTask(targetDate, date, task, tasks, days, date));
     message.success("Task moved");
   };
 
@@ -255,7 +171,7 @@ const TaskActions = ({ task }) => {
         icon: <ArrowRightOutlined />,
         label: "Move task",
         children: [
-          { key: "move", label: "Move one day" },
+          { key: "move-one", label: "Move one day" },
           { key: "move-today", label: "Move to today", disabled: isDateToday },
         ],
         disabled: task.permanent,

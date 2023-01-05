@@ -31,7 +31,7 @@ export default [
   },
   {
     id: 4,
-    name: "Complete work on SOUR-3487",
+    name: "Complete work on UI updates",
     money: 5,
     permanent: false,
     repeatable: false,

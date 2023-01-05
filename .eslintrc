@@ -1,0 +1,14 @@
+{
+  "name": "caeshly",
+  "eslintConfig": {
+    "env": {
+      "es6": true
+    },
+    "plugins": ["better-mutation"],
+    "rules": {
+      "better-mutation/no-mutating-functions": "error",
+      "better-mutation/no-mutating-methods": "error",
+      "better-mutation/no-mutation": "error"
+    }
+  }
+}

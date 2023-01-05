@@ -1,12 +1,17 @@
 import React, { useContext, useMemo } from "react";
-import { orderBy } from "lodash";
+import _, { orderBy } from "lodash";
 import styled from "styled-components";
-import { Space, Typography } from "antd";
+import { Dropdown, message, Space, Typography } from "antd";
+import { ArrowRightOutlined } from "@ant-design/icons";
 
 import Task from "./Task";
 
 import DaysContext from "../contexts/DaysContext";
 import DateContext from "../contexts/DateContext";
+import TasksContext from "../contexts/TasksContext";
+import SubtasksContext from "../contexts/SubtasksContext";
+
+import { getCurrentDayObj, getTaskFromDay, moveTask } from "../utils";
 
 const StyledTaskList = styled.div`
   margin: 20px 0;
@@ -19,9 +24,21 @@ const StyledTaskList = styled.div`
   }
 `;
 
+const TaskListTitle = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+
+  .ant-dropdown-button {
+    width: auto;
+  }
+`;
+
 const TaskList = ({ permanent, tasks }) => {
   const [date] = useContext(DateContext);
-  const [days] = useContext(DaysContext);
+  const [days, setDays] = useContext(DaysContext);
+  const { tasks: allTasks } = useContext(TasksContext);
+  const { subtasks } = useContext(SubtasksContext);
 
   const currentDay = useMemo(
     () => days.find((d) => d.date === date),
@@ -45,18 +62,62 @@ const TaskList = ({ permanent, tasks }) => {
     );
   }, [date, tasks, days]);
 
+  const handleMenuClick = async ({ key }) => {
+    if (key === "move-all") {
+      let numberOfTasks = 0;
+      const today = new Date().toLocaleDateString();
+      let newDaysArr = days;
+
+      for (const task of thisDaysTasks) {
+        const taskFromDay = getTaskFromDay(task, getCurrentDayObj(date, days));
+        if (!taskFromDay) return console.error("Cannot retrieve taskFromDay");
+
+        if (!taskFromDay.done) {
+          newDaysArr = moveTask(today, date, task, allTasks, newDaysArr);
+          numberOfTasks++;
+        }
+      }
+      setDays(newDaysArr);
+      message.success(
+        `${numberOfTasks} task${numberOfTasks > 1 ? "s" : ""} moved`
+      );
+    }
+  };
+
+  const menuProps = {
+    items: [
+      {
+        key: "move-all",
+        icon: <ArrowRightOutlined />,
+        label: "Move all undone tasks to today",
+      },
+    ],
+    onClick: handleMenuClick,
+  };
+
   return currentDay ? (
     <StyledTaskList>
-      <Typography.Title level={5}>
-        {permanent
-          ? "Daily"
-          : isDateToday
-          ? "Today's"
-          : `${new Date(date).toLocaleString("en-us", {
-              weekday: "long",
-            })}'s`}{" "}
-        Tasks
-      </Typography.Title>
+      <TaskListTitle>
+        <Typography.Title level={5}>
+          {permanent
+            ? "Daily"
+            : isDateToday
+            ? "Today's"
+            : `${new Date(date).toLocaleString("en-us", {
+                weekday: "long",
+              })}'s`}{" "}
+          Tasks
+        </Typography.Title>
+        {!permanent && !isDateToday && (
+          <Dropdown.Button
+            destroyPopupOnHide={true}
+            trigger={["click"]}
+            menu={menuProps}
+            size="small"
+            disabled={!thisDaysTasks.length}
+          ></Dropdown.Button>
+        )}
+      </TaskListTitle>
       {!!thisDaysTasks?.length ? (
         <Space size="middle" direction="vertical" style={{ display: "flex" }}>
           {thisDaysTasks.map((task) => (
