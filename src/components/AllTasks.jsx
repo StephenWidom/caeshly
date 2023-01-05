@@ -11,6 +11,8 @@ import TasksContext from "../contexts/TasksContext";
 import DaysContext from "../contexts/DaysContext";
 import TagsContext from "../contexts/TagsContext";
 import DateContext from "../contexts/DateContext";
+import CashContext from "../contexts/CashContext";
+import WithdrawalsContext from "../contexts/WithdrawalsContext";
 
 const StyledContainer = styled(Container)`
   padding-bottom: 20px;
@@ -20,10 +22,38 @@ const AllTasks = ({ groupedTasks }) => {
   const { setTasks, setSubtasks } = useContext(TasksContext);
   const [days, setDays] = useContext(DaysContext);
   const { setTags } = useContext(TagsContext);
-  const [date] = useContext(DateContext);
+  const [date, setDate] = useContext(DateContext);
+  const [cash, setCash] = useContext(CashContext);
+  const [withdrawals, setWithdrawals] = useContext(WithdrawalsContext);
 
-  const importData = () => {
-    message.success("imported!");
+  const importData = (e) => {
+    // TODO: Move to utils, or otherwise define ONCE
+    const file = e?.target?.files[0];
+    if (!file) return message.error("Please provide a file");
+    if (file.type !== "application/json")
+      return message.error("Only JSON files allowed");
+
+    const fileReader = new FileReader();
+    fileReader.readAsText(file, "UTF-8");
+    fileReader.onload = (e) => {
+      if (!e?.target?.result)
+        return message.error("Does not seem like a valid Caeshly file");
+
+      const data = JSON.parse(e.target.result);
+      if (data?.version[0] !== "2")
+        return message.error(
+          `Outdate file version: ${data?.version}. Must be at least v2.0.0`
+        );
+      const { tasks, cash, days, date, withdrawals, tags, subtasks } = data;
+      setTasks(tasks);
+      setCash(cash);
+      setDays(days);
+      setDate(date);
+      setWithdrawals(withdrawals);
+      setTags(tags);
+      setSubtasks(subtasks);
+      return message.success("Data imported");
+    };
   };
 
   const createExamples = async () => {

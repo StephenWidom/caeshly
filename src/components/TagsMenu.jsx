@@ -13,6 +13,7 @@ import TasksContext from "../contexts/TasksContext";
 const StyledListItem = styled.li`
   border-right: 1px solid;
   border-left: 8px solid;
+  padding: 12px;
   border-color: ${(props) => `${props.$tagColor}`};
 `;
 

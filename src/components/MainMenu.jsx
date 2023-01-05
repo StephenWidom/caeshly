@@ -72,6 +72,7 @@ const MainMenu = ({ setDeleteVisibility }) => {
   const showFileSelector = () => document.querySelector("#importFile").click();
 
   const importData = (e) => {
+    // TODO: Move to utils, or otherwise define ONCE
     const file = e?.target?.files[0];
     if (!file) return message.error("Please provide a file");
     if (file.type !== "application/json")
@@ -84,9 +85,9 @@ const MainMenu = ({ setDeleteVisibility }) => {
         return message.error("Does not seem like a valid Caeshly file");
 
       const data = JSON.parse(e.target.result);
-      if (data?.version[0] !== 2)
+      if (data?.version[0] !== "2")
         return message.error(
-          `Outdate file version: ${version}. Must be at least v2.0.0`
+          `Outdate file version: ${data?.version}. Must be at least v2.0.0`
         );
       const { tasks, cash, days, date, withdrawals, tags, subtasks } = data;
       setTasks(tasks);
