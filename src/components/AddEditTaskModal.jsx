@@ -125,18 +125,23 @@ const AddEditTaskModal = (props) => {
         setDays(
           days.map((day) => ({
             ...day,
-            dailySubtasks: [...day.dailySubtasks, ...subtasksToAdd],
+            dailySubtasks: [...(day.dailySubtasks ?? []), ...subtasksToAdd],
           }))
         );
       } else {
         setDays(
           produce(days, (draft) => {
             const todayIndex = days.findIndex((d) => d.date === date);
-            if (todayIndex !== -1)
+            if (todayIndex !== -1) {
+              // Ensure dailySubtasks exists and initialize it as an empty array if it doesn't
+              draft[todayIndex].dailySubtasks =
+                draft[todayIndex].dailySubtasks ?? [];
               draft[todayIndex].dailySubtasks.push(...subtasksToAdd);
+            }
           })
         );
       }
+      // If we're adding a brand new boi
     } else {
       const thisTaskSubtasks = !!selectedSubtasks.length
         ? selectedSubtasks.map((s) => s.id)
@@ -172,7 +177,7 @@ const AddEditTaskModal = (props) => {
           days.map((day) => ({
             ...day,
             dailyTasks: [...day.dailyTasks, { taskId: newTaskId, done: 0 }],
-            dailySubtasks: [...day.dailySubtasks, ...subtasksToAdd],
+            dailySubtasks: [...(day.dailySubtasks ?? []), ...subtasksToAdd],
           }))
         );
       } else {
@@ -181,6 +186,8 @@ const AddEditTaskModal = (props) => {
             const todayIndex = days.findIndex((d) => d.date === date);
             if (todayIndex !== -1) {
               draft[todayIndex].dailyTasks.push({ taskId: newTaskId, done: 0 });
+              draft[todayIndex].dailySubtasks =
+                draft[todayIndex].dailySubtasks ?? [];
               draft[todayIndex].dailySubtasks.push(...subtasksToAdd);
             }
           })
