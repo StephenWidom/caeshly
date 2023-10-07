@@ -12,7 +12,7 @@ import TasksContext from "../contexts/TasksContext";
 import DateContext from "../contexts/DateContext";
 import DaysContext from "../contexts/DaysContext";
 
-import { doesDateExist, getStartingDailyTasks } from "../utils";
+import { doesDateExist, getStartingDailyTasks, getNextDayObj } from "../utils";
 
 const StyledHeader = styled.div`
   padding: 12px 0;
@@ -39,18 +39,29 @@ const AppHeader = ({ setDeleteVisibility }) => {
   );
 
   const goToToday = () => {
-    const today = new Date().toLocaleDateString();
-    if (!doesDateExist(days, today)) {
-      setDays(
-        produce(days, (draft) => {
-          draft.unshift({
-            date: today,
-            dailyTasks: getStartingDailyTasks(tasks),
-            cash: 0,
-          });
-        })
-      );
+    const todayDateObj = new Date();
+    const today = todayDateObj.toLocaleDateString();
+    let nextDayObj = getNextDayObj(date);
+    let daysToAdd = [];
+
+    while (nextDayObj <= todayDateObj) {
+      let nextDay = nextDayObj.toLocaleDateString();
+      if (!doesDateExist(days, nextDay)) {
+        daysToAdd.push({
+          date: nextDay,
+          dailyTasks: getStartingDailyTasks(tasks),
+          cash: 0,
+        });
+      }
+      nextDayObj = getNextDayObj(nextDayObj);
     }
+
+    setDays(
+      produce(days, (draft) => {
+        draft.push(...daysToAdd);
+      })
+    );
+
     setDate(today);
   };
 

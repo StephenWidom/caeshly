@@ -70,6 +70,11 @@ export const getTagFromTask = (tags, tagId) =>
 export const getSubtask = (subtaskId, subtasks) =>
   subtasks.find((s) => s.id === subtaskId);
 
+export const getNextDayObj = (date) => new Date(moment(date).add(1, "days"));
+
+export const getNextDay = (date) =>
+  new Date(moment(date).add(1, "days")).toLocaleDateString();
+
 export const moveTask = (
   targetDate,
   currentDate,
@@ -80,9 +85,7 @@ export const moveTask = (
 ) => {
   // TODO: add unit test
   // Get date of following day
-  const nextDay = new Date(
-    moment(currentDate).add(1, "days")
-  ).toLocaleDateString();
+  const nextDay = getNextDay(currentDate);
 
   // Clone days array
   let updatedDaysArr = cloneDeep(days);
