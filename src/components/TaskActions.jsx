@@ -93,6 +93,8 @@ const TaskActions = ({ task }) => {
       let streak = 1;
       const todayIndex = days.findIndex((day) => day.date === date);
       if (todayIndex === -1) return console.error("Could not find todayIndex");
+
+      // Count days prior to selected day
       for (let i = todayIndex - 1; i >= 0; i--) {
         const tempTaskFromDay = getTaskFromDay(task, days[i]);
         if (tempTaskFromDay.done) {
@@ -102,6 +104,7 @@ const TaskActions = ({ task }) => {
         }
       }
 
+      // Count days ahead of selected day
       for (let i = todayIndex + 1; i <= days.length; i++) {
         if (!days[i]) break;
         const tempTaskFromDay = getTaskFromDay(task, days[i]);
