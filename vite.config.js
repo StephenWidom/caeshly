@@ -8,7 +8,7 @@ export default defineConfig({
     include: ["@ant-design/icons", "antd"],
   },
   define: {
-    global: "({})",
+    global: "window",
   },
   build: {
     minify: "terser",
